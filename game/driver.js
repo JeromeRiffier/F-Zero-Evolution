@@ -6,8 +6,11 @@ class driver{
         //Option de debug
         this.debug = false;
 
+        //Gestion score
         this.name = random(proposition_name);
-        this.score =0 //+1 a chacque checkpoint
+        this.checkpointValide = 0; //+1 a chacque checkpoint
+        this.tempsSurvecut = 0;//En milliseconde - permettra de calculer le score + gestion des stats
+
 
         //Gestion des ligne de vision/collision [x,y, distance] x et y = la position de la fin de la ligne et distance = distance d'impact avec le premier mur
         this.visionLeftHard = [],
@@ -34,7 +37,7 @@ class driver{
         if (brain && human == false) {
             this.brain = brain.copy();
         } else if (!brain && human == false){
-            this.brain = new NeuralNetwork(8, 15, 3);
+            this.brain = new NeuralNetwork(8, nbr_neurone_hidden, 3);
         }
     }
     

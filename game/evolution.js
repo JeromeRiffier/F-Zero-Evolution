@@ -1,3 +1,6 @@
+//Pour voire les stats de tensorflow en temps reel, utilise tf.memory() dans la console
+
+
 class NeuralNetwork {
     constructor(a, b, c, d) {
       if (a instanceof tf.Sequential) {

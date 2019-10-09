@@ -140,16 +140,15 @@ class car {
         collisionDetectionCheckpoint (){
             if (this.valeurProchainCheckpoint==-1) {//Test de collision avec la ligne de départ
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[0][0], Map.external[0][1], Map.internal[0][0], Map.internal[0][1], 0.5)) {
-                    this.driver.score += 1;
+                    this.driver.checkpointValide += 1;
                     console.clear();
-                    console.log("Nouveau tour ! ");
-                    console.log("Score = " + this.driver.score);
+                    console.log("Nouveau tour pour " + this.driver.name + " ! " + "Score = " + this.driver.checkpointValide);
                     this.valeurProchainCheckpoint+=1;
                 }
             }else{ //Test des collision avec les checkpoint
                 if (collidePointLine(this.pos.x,this.pos.y,Map.checkpointX1s[this.valeurProchainCheckpoint],Map.checkpointY1s[this.valeurProchainCheckpoint],Map.checkpointX2s[this.valeurProchainCheckpoint],Map.checkpointY2s[this.valeurProchainCheckpoint], 0.5)) {
-                    this.driver.score += 1;
-                    console.log("Score = " + this.driver.score);
+                    this.driver.checkpointValide += 1;
+                    console.log(this.driver.name + this.driver.checkpointValide + " checkpoint validé !" );
                     if (this.valeurProchainCheckpoint == this.nbrCheckpointTotal-1) {
                         this.valeurProchainCheckpoint=-1;
                     }else{
@@ -162,16 +161,20 @@ class car {
         collisionDetectionWall (){
             for (let i = 1; i < Map.external.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[i-1][0], Map.external[i-1][1],Map.external[i][0], Map.external[i][1], 0.5)) {
-                    console.log(this.driver.name + " à touché l'exterieur !");
-                    this.driver.score += frameCount-level.start_time;
+                    this.driver.tempsSurvecut = Date.now() - level.start_time;
                     this.stillAlive = false;
+                    console.log("RIP " + this.driver.name + " qui à touché l'exterieur !");
+                    console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
+                    level.nbr_pilote_vivant -= 1;
                 }
             }
             for (let i = 1; i < Map.internal.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.internal[i-1][0], Map.internal[i-1][1],Map.internal[i][0], Map.internal[i][1], 0.5)) {
-                    console.log(this.driver.name + " à touché l'interieur !");
-                    this.driver.score += frameCount-level.start_time;
+                    this.driver.tempsSurvecut = Date.now() - level.start_time;
                     this.stillAlive = false;
+                    console.log("RIP " + this.driver.name + " qui à touché l'interieur ! ");
+                    console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec. Et traverser " + this.driver.checkpointValide + " checkpoints... ");
+                    level.nbrP
                 }
             }
         }

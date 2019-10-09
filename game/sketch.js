@@ -37,12 +37,11 @@
 
 
 
-
 let running = false;
 let cars = [];
-
 let mouseRoad = []
 
+const nbr_neurone_hidden = 15;
 
 //   Game engine
 function setup() {
@@ -51,17 +50,18 @@ function setup() {
     level = new level();
     Map = new Map();
     createCanvas(level.width, level.height);
-    level.draw_background(true);
+    level.draw_background();
+    level.draw_start();
     //Ajout des joueurs
-    level.createCars(1, true);//Optionnal ajouter true pour faire jouer humain
+    //level.createCars(1, true);//Optionnal ajouter true pour faire jouer humain
+    level.raceStart();
+
 }
 
 function draw() {
     //Pouvoire faire stop...
     if (!running) return
     level.update();
-
-
 
 }
 
@@ -76,12 +76,7 @@ function mouseClicked(){
 
 
 
-function start_race(){
-    running=false;
-    level.destroyCars();
-    level.createCars(10);//Optionnal ajouter true pour faire jouer humain
-    level.start_time =  frameCount;
-    running=true;
-
+function start(){
+    level.raceStart();
 }
 
