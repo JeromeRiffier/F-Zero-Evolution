@@ -43,7 +43,7 @@ class level {
         return;
     }
 
-    draw_background (){
+    draw_background(){
         //Dessine le fond
         background ( this.background_color_r, this.background_color_g, this.background_color_b)
     }
@@ -66,7 +66,7 @@ class level {
     }
 
 
-    raceStart(nbrPiloteVoulu = 10){
+    start(nbrPiloteVoulu){
         this.destroyCars();
         this.createCars(nbrPiloteVoulu);//Optionnal ajouter true pour faire jouer humain
         this.nbr_pilote_total = nbrPiloteVoulu;//Allumage des descompte...
@@ -77,14 +77,20 @@ class level {
 
     waiForNextRound(){
         running = false;
+        for (let index = 0; index < cars.length; index++){
+            if(cars[index].stillAlive){
+                cars[index].kill();            
+            }
+        }
+        this.draw_background();
         this.draw_wait_next_round();
     }
 
     draw_wait_next_round(){  
         fill('#6ab04c')
         textSize(60);
-        text('Next Round', (this.width/2), (this.height/3)*2);
+        text('Click for launch next round', (this.width/2), (this.height/3)*2);
     }
 
-
+    
 }

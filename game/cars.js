@@ -90,6 +90,14 @@ class car {
             }
         }
         
+        kill (){
+            this.stillAlive = false;
+            level.nbr_pilote_vivant -= 1;
+            this.driver.tempsSurvecut = Date.now() - level.start_time;
+            this.driver.score = (this.driver.tempsSurvecut/100) + (this.driver.checkpointValide*100);
+            console.log("RIP " + this.driver.name );
+            console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
+        }
 
         commande_manuel (){
             if (this.human==true) {
@@ -161,20 +169,14 @@ class car {
         collisionDetectionWall (){
             for (let i = 1; i < Map.external.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[i-1][0], Map.external[i-1][1],Map.external[i][0], Map.external[i][1], 0.5)) {
-                    this.driver.tempsSurvecut = Date.now() - level.start_time;
-                    this.stillAlive = false;
-                    console.log("RIP " + this.driver.name + " qui à touché l'exterieur !");
-                    console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
-                    level.nbr_pilote_vivant -= 1;
+                    this.kill();
+                    console.log("Il à touché le mur exterieur !");
                 }
             }
             for (let i = 1; i < Map.internal.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.internal[i-1][0], Map.internal[i-1][1],Map.internal[i][0], Map.internal[i][1], 0.5)) {
-                    this.driver.tempsSurvecut = Date.now() - level.start_time;
-                    this.stillAlive = false;
-                    console.log("RIP " + this.driver.name + " qui à touché l'interieur ! ");
-                    console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec. Et traverser " + this.driver.checkpointValide + " checkpoints... ");
-                    level.nbrP
+                    console.log("Il à touché le mur interieur !");
+                    this.kill();
                 }
             }
         }

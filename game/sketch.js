@@ -54,7 +54,7 @@ function setup() {
     level.draw_start();
     //Ajout des joueurs
     //level.createCars(1, true);//Optionnal ajouter true pour faire jouer humain
-    level.raceStart();
+    start();
 
 }
 
@@ -76,7 +76,7 @@ function mouseClicked(){
 
 
 
-function start(){
-    level.raceStart();
+function start(Nombre_de_pilote = 10){
+    level.start(Nombre_de_pilote);
 }
 

@@ -10,26 +10,27 @@ class driver{
         this.name = random(proposition_name);
         this.checkpointValide = 0; //+1 a chacque checkpoint
         this.tempsSurvecut = 0;//En milliseconde - permettra de calculer le score + gestion des stats
+        this.score = 0;// tempsSurvecut en 10eme de seconde + 100pts par checkpoint pour le moment
 
 
         //Gestion des ligne de vision/collision [x,y, distance] x et y = la position de la fin de la ligne et distance = distance d'impact avec le premier mur
-        this.visionLeftHard = [],
-        this.visionLeftSoft = [],
-        this.visionAhead = [],
-        this.visionRightSoft = [],
-        this.visionRightHard = [],
+        this.visionLeftHard = [] ;
+        this.visionLeftSoft = [] ;
+        this.visionAhead = [] ;
+        this.visionRightSoft = [] ;
+        this.visionRightHard = [] ;
 
-        this.visionLeftHard_hit = [],
-        this.visionLeftSoft_hit = [],
-        this.visionAhead_hit = [],
-        this.visionRightSoft_hit = [],
-        this.visionRightHard_hit = [],
+        this.visionLeftHard_hit = [] ;
+        this.visionLeftSoft_hit = [] ;
+        this.visionAhead_hit = [] ;
+        this.visionRightSoft_hit = [] ;
+        this.visionRightHard_hit = [] ;
 
-        this.visionLeftHard_where = [],
-        this.visionLeftSoft_where = [],
-        this.visionAhead_where = [],
-        this.visionRightSoft_where = [],
-        this.visionRightHard_where = []
+        this.visionLeftHard_where = [] ;
+        this.visionLeftSoft_where = [] ;
+        this.visionAhead_where = [] ;
+        this.visionRightSoft_where = [] ;
+        this.visionRightHard_where = [] ;
 
 
 
