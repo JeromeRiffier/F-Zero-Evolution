@@ -16,7 +16,8 @@ Les librairies utilisées sont : P5.js, TensorFlow.js, jquery  (pour la page d'a
 ### Configuration
 
 Cliquer sur le canvas arrete/relance le framerate (et fais donc pause) </br>
-Executer start_race() en console permet de démarrer une course controller par l'IA avec 10 Pilotes
+Executer start() en console permet de démarrer une course controller par l'IA avec 10 Pilotes
+Possibilité de choisir X pilotes avec start(X);
 
 
 ## Tests
