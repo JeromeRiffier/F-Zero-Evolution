@@ -17,9 +17,10 @@ class level {
         this.new_child = [];
     }
 
-    
     update() {
         this.draw_background();
+        this.draw_gen_control();
+        this.affichage_score();
         
         if(Date.now() - this.start_time < 180000 && this.nbr_pilote_vivant > 0){//180 000 milliseconde == 3min
             Map.draw();
@@ -28,7 +29,7 @@ class level {
             }
         }else{
             console.log("Fin de la course");
-            this.waiForNextRound();
+            this.nextRound();
         }
     }
 
@@ -69,6 +70,15 @@ class level {
         background ( this.background_color_r, this.background_color_g, this.background_color_b)
     }
 
+    draw_gen_control(){
+        rect(1320, 25, 220, 50, 20, 15, 10, 5);
+        noStroke();
+        fill(0, 225, 0)
+        textSize(20);
+        textAlign(CENTER, CENTER);
+        text("Generation suivante", 1425, 50);
+    }
+
     draw_start(){
         stroke('#33ccff')
         strokeWeight(4)
@@ -86,6 +96,20 @@ class level {
         text('START', (this.width/2), (this.height/3)*2);
     }
 
+    affichage_score(){
+        //Le conteur de parties
+        //Le compteur de joueur encore en vie
+        fill(200, 200, 200)
+        textSize(20);
+        textAlign(LEFT, CENTER);
+            text("Generation : " + this.gen, (this.width-260), 130);
+            text("Nombre de joueur : "+ this.nbr_pilote_vivant, this.width-260, 100);
+        /*Affichage score max
+            fill(220, 220, 220)
+            textSize(20);
+            textAlign(LEFT, CENTER);
+            text("Score :"+ this.time, this.width-250, this.height-40);*/
+    }
 
     start(nbrPiloteVoulu){
         this.destroyCars();
@@ -95,8 +119,6 @@ class level {
         this.start_time =   Date.now();
         this.start_frame =  frameCount;
     }
-
-
 
     select_best(){
         //on trie cars[] du moin bon cars[0] vers le meilleur cars[cars.length];
@@ -112,7 +134,7 @@ class level {
             this.new_child.push(this.reproduce_driver(cars[i]));
             this.new_child.push(this.reproduce_driver(cars[i]));            
         }
-        for (let i = 0; i < this.new_child.length && i < nbr_cars_wanted; i++) {
+        for (let i = 0; i < this.new_child.length && cars.length < nbr_cars_wanted; i++) {
             cars.push(new car(false, this.new_child[i]));
         }
         this.destroyNew_child();
@@ -135,7 +157,7 @@ class level {
         }
     }
 
-    waiForNextRound(){
+    nextRound(){
         running = false;
         for (let index = 0; index < cars.length; index++){
             if(cars[index].stillAlive){
@@ -144,7 +166,6 @@ class level {
         }
         this.gen += 1;
         this.select_best();
-        //Reset all car stats (pos, dir, speed) to start state
         this.resetCarStats();
         this.start_time =   Date.now();
         this.start_frame =  frameCount;

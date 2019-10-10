@@ -70,14 +70,17 @@ function draw() {
 
 
 function mouseClicked(){
+    if (mouseX > 1320 && mouseX < 1540  && mouseY  > 25 && mouseY < 75) {
+        //Go next round ! 
+        level.nextRound();
+        return;
+    }
     if (mouseX > 0 && mouseX < level.width  && mouseY  > 0 && mouseY < level.height) {
-        running = !running
+        running = !running;
+        return;
     }
 }
  
-
-
-
 function start(){
     level.start(nbr_cars_wanted);
 }
