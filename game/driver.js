@@ -1,7 +1,7 @@
 const proposition_name = ['Michel Boujenah','Michel Denisot','Michel Houellebecq','Michel Onfray','Michel Platini','Michel Polnareff','Michel Sardou','Michel Galabru','Michel Cymes','Michel Drucker','Michel Leeb','M. KOHLER','Mme de BAYSER','M. NUSSBAUMER','M. ZAJDENWEBER','Zerator','MisterMV','Squeezie','Aiekillu','Maghla','Nyo','Antoine Daniel','Joueur du Grenier','Seb du Grenier','Gotaga','Mickalow','Bob Lennon','TheFantasio974','Master Snakou','Sardoche','Aldériate','Wakz','Chap','LeRoiBisou','Narkuss','Trinity','Jeel','Moman','Gius','Mathieu Sommet','Aypierre','TheGuill84','Libe_','Lege','Aayley','DrFeelGood','ZulZorander','DamDamLive','Mynthos','Anthox Collaboy','Aelthan Ferragun','Carl Jr','Bren','Elarcis','Prinovex','Tenebie','Laink','Terracid','Gydias','Crawling Flesh','Unsterblicher','Kigyar','Mahyar','Bruce Benamran','Batbaileys','Benzaie','Ganesh2','Emmanuel Macron','Jeannot Nymousse','Gueuletons','Mr. Poulpe','Stardust','100Pseudo','Ermite Moderne','Tai Shindehai','Ishigata','MJ','Neku','StateAlchemist','JeFaisChierLesGens','JeanBaptisteShow','KickSama','Corobizar','LeDawg','LinksTheSun','Monsieur Plouf','SadPanda','Charlie Danger','Nota Bene','Ninja','Dr.Disrespect','Shroud','Cyprien','Norman','Deadslug','MaxiTruite','Aurelien_Sama','Bill Silverlight','Ika','EpeeForte','KennyStream','LittleBigWhale','Gom4rt','Alphacast','Lutti','Locklear','Diabalzane','Domingo','Kotei','Kameto','Baghera Jones','Doigby','Xari','Jiraya','Tweekz','Wingobear','Zankioh','Tio','Manuel Ferrara','Lapi','Best Marmotte','Etoiles','Hexakill','Zack Nani']
 
 
-class driver{
+class Driver{
     constructor(human=false, brain){
         //Option de debug
         this.debug = false;
@@ -9,6 +9,7 @@ class driver{
         //Gestion score
         this.name = random(proposition_name);
         this.checkpointValide = 0; //+1 a chacque checkpoint
+        this.tourValide=0;
         this.tempsSurvecut = 0;//En milliseconde - permettra de calculer le score + gestion des stats
         this.score = 0;// tempsSurvecut en 10eme de seconde + 100pts par checkpoint pour le moment
 

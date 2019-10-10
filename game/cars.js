@@ -1,5 +1,5 @@
 class car {
-    constructor (human=false){
+    constructor (human=false,driver){
         this.human=human;
         this.stillAlive = true;
         //Taille du vaisseaux
@@ -18,7 +18,11 @@ class car {
         this.maxSpeed = 0.8;
         this.friction = 0.97;
         //Creation du pilote
-        this.driver = new driver();
+        if (!driver) {
+            this.driver = new Driver();
+        }else{
+            this.driver = new Driver(false, driver.brain);
+        }
 
         //Gestion score/ récompence
         this.nbrCheckpointTotal = Map.checkpointX1s.length //^^
@@ -94,9 +98,9 @@ class car {
             this.stillAlive = false;
             level.nbr_pilote_vivant -= 1;
             this.driver.tempsSurvecut = Date.now() - level.start_time;
-            this.driver.score = (this.driver.tempsSurvecut/100) + (this.driver.checkpointValide*100);
-            console.log("RIP " + this.driver.name );
-            console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
+            this.driver.score = (this.driver.tempsSurvecut/1000) + (this.driver.checkpointValide*10) + (this.driver.tourValide*50);
+            //console.log("RIP " + this.driver.name );
+            //console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
         }
 
         commande_manuel (){
@@ -148,7 +152,7 @@ class car {
         collisionDetectionCheckpoint (){
             if (this.valeurProchainCheckpoint==-1) {//Test de collision avec la ligne de départ
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[0][0], Map.external[0][1], Map.internal[0][0], Map.internal[0][1], 0.5)) {
-                    this.driver.checkpointValide += 1;
+                    this.driver.tourValide += 1;
                     console.clear();
                     console.log("Nouveau tour pour " + this.driver.name + " ! " + "Score = " + this.driver.checkpointValide);
                     this.valeurProchainCheckpoint+=1;
@@ -170,12 +174,12 @@ class car {
             for (let i = 1; i < Map.external.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[i-1][0], Map.external[i-1][1],Map.external[i][0], Map.external[i][1], 0.5)) {
                     this.kill();
-                    console.log("Il à touché le mur exterieur !");
+                    //console.log("Il à touché le mur exterieur !");
                 }
             }
             for (let i = 1; i < Map.internal.length; i++) {
                 if (collidePointLine(this.pos.x,this.pos.y,Map.internal[i-1][0], Map.internal[i-1][1],Map.internal[i][0], Map.internal[i][1], 0.5)) {
-                    console.log("Il à touché le mur interieur !");
+                    //console.log("Il à touché le mur interieur !");
                     this.kill();
                 }
             }

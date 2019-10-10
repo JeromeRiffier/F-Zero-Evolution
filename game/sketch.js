@@ -39,9 +39,11 @@
 
 let running = false;
 let cars = [];
+let mutation_rate = 0.1
+const nbr_neurone_hidden = 15;
+let nbr_cars_wanted = 10;
 let mouseRoad = []
 
-const nbr_neurone_hidden = 15;
 
 //   Game engine
 function setup() {
@@ -76,7 +78,7 @@ function mouseClicked(){
 
 
 
-function start(Nombre_de_pilote = 10){
-    level.start(Nombre_de_pilote);
+function start(){
+    level.start(nbr_cars_wanted);
 }
 
