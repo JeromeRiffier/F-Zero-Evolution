@@ -44,6 +44,7 @@ class car {
                 this.turn();
                 this.collisionDetectionCheckpoint();
                 this.collisionDetectionWall();
+                this.am_i_late();
 
             }
         }
@@ -98,9 +99,19 @@ class car {
             this.stillAlive = false;
             level.nbr_pilote_vivant -= 1;
             this.driver.tempsSurvecut = Date.now() - level.start_time;
-            this.driver.score = (this.driver.tempsSurvecut/1000) + (this.driver.checkpointValide*10) + (this.driver.tourValide*50);
+            this.calculate_score();
             //console.log("RIP " + this.driver.name );
             //console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
+        }
+        calculate_score(){
+            this.driver.score = (this.driver.checkpointValide*10) + (this.driver.tourValide*50);
+            // + (1/Temps entre les checkpoint)*20
+            if (this.driver.temps_passage_checkpoint.length>1) {                
+                for (let i = 1; i < this.driver.temps_passage_checkpoint.length; i++) {
+                    this.driver.score += (1/ (this.driver.temps_passage_checkpoint[i]-this.driver.temps_passage_checkpoint[i-1]))*20
+                    console.log(this.driver.name + " a obtenu " + (1/ (this.driver.temps_passage_checkpoint[i]-this.driver.temps_passage_checkpoint[i-1]))*20 + " point en passant les checkpoints")
+                }
+            }
         }
 
         commande_manuel (){
@@ -133,7 +144,9 @@ class car {
             this.accelerated(actions[0]);
 
             //console.log('Freinage = ' + actions[1]);
-            this.brake(actions[1])
+            if (actions[1]<0.5) {
+                this.brake(actions[1])
+            }
 
             //console.log('Direction = ' + actions[2]);
             let turn_val;
@@ -150,21 +163,40 @@ class car {
         }
 
         collisionDetectionCheckpoint (){
+            if (this.valeurProchainCheckpoint==0) {//Test de collision avec la ligne de départ
+                //On test la collision avec le checkpoint precedent (mauvais sens, mort du joueur)
+                if (collidePointLine(this.pos.x,this.pos.y,Map.checkpointX1s[Map.checkpointX1s.length-1],Map.checkpointY1s[Map.checkpointX1s.length-1],Map.checkpointX2s[Map.checkpointX1s.length-1],Map.checkpointY2s[Map.checkpointX1s.length-1], 0.5)) {
+                   this.driver.checkpointValide -= 1;
+                   this.kill();
+                   return;
+               }
+            }            
             if (this.valeurProchainCheckpoint==-1) {//Test de collision avec la ligne de départ
                 if (collidePointLine(this.pos.x,this.pos.y,Map.external[0][0], Map.external[0][1], Map.internal[0][0], Map.internal[0][1], 0.5)) {
                     this.driver.tourValide += 1;
-                    console.clear();
-                    console.log("Nouveau tour pour " + this.driver.name + " ! " + "Score = " + this.driver.checkpointValide);
+                    this.driver.temps_passage_tours.push((Date.now() - level.start_time)/1000)
+                    this.driver.temps_inter_checkpoint=Date.now()/1000;
                     this.valeurProchainCheckpoint+=1;
+                    return;
                 }
             }else{ //Test des collision avec les checkpoint
+                //On test la collision avec le checkpoint precedent (mauvais sens, mort du joueur)
+                if (collidePointLine(this.pos.x,this.pos.y,Map.checkpointX1s[this.valeurProchainCheckpoint-2],Map.checkpointY1s[this.valeurProchainCheckpoint-2],Map.checkpointX2s[this.valeurProchainCheckpoint-2],Map.checkpointY2s[this.valeurProchainCheckpoint-2], 0.5)) {
+                    this.driver.checkpointValide -= 1;
+                    this.kill();
+                    return;
+                }
                 if (collidePointLine(this.pos.x,this.pos.y,Map.checkpointX1s[this.valeurProchainCheckpoint],Map.checkpointY1s[this.valeurProchainCheckpoint],Map.checkpointX2s[this.valeurProchainCheckpoint],Map.checkpointY2s[this.valeurProchainCheckpoint], 0.5)) {
                     this.driver.checkpointValide += 1;
-                    console.log(this.driver.name + this.driver.checkpointValide + " checkpoint validé !" );
+                    this.driver.temps_passage_tours.push((Date.now() - level.start_time)/1000)
+                    this.driver.temps_inter_checkpoint=Date.now()/1000;
+                    //console.log(this.driver.name + this.driver.checkpointValide + " checkpoint validé !" );
                     if (this.valeurProchainCheckpoint == this.nbrCheckpointTotal-1) {
                         this.valeurProchainCheckpoint=-1;
+                        return;
                     }else{
                         this.valeurProchainCheckpoint+=1;
+                        return;
                     }
                 }
             }
@@ -185,5 +217,14 @@ class car {
             }
         }
 
+        am_i_late(){
+            if (this.driver.temps_inter_checkpoint == 0) {
+                this.driver.temps_inter_checkpoint = level.start_time/1000;
+            }
+            if (Date.now()/1000 - this.driver.temps_inter_checkpoint > max_time_between_checkpoint){
+                //console.log("To late, you die Mr " + this.driver.name);
+                this.kill();
+            }
+        }
 
 }

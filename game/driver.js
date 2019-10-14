@@ -11,6 +11,10 @@ class Driver{
         this.checkpointValide = 0; //+1 a chacque checkpoint
         this.tourValide=0;
         this.tempsSurvecut = 0;//En milliseconde - permettra de calculer le score + gestion des stats
+        this.temps_passage_checkpoint = [];
+        this.temps_passage_checkpoint.push(level.start_time);
+        this.temps_passage_tours = [];
+        this.temps_inter_checkpoint = 0;
         this.score = 0;// tempsSurvecut en 10eme de seconde + 100pts par checkpoint pour le moment
 
 
@@ -193,6 +197,17 @@ class Driver{
             }
         }
     }
+
+
+    reset(){
+        this.checkpointValide = 0; 
+        this.tourValide=0;
+        this.tempsSurvecut = 0;
+        this.temps_passage_checkpoint = [];
+        this.temps_passage_checkpoint.push(level.start_time);
+        this.temps_inter_checkpoint = 0;
+        this.score = 0;
+    }
     
     /*  IA    */
     think(pos, dir, vitesse){
@@ -203,11 +218,11 @@ class Driver{
         inputs[0] = pos.x,pos.y;
         inputs[1] = dir_vector.x,dir_vector.y;
         inputs[2] = vitesse.x,vitesse.y;
-        inputs[3] = this.visionLeftHard_where[0],this.visionLeftHard_where[1];
-        inputs[4] = this.visionLeftSoft_where[0],this.visionLeftSoft_where[1];
-        inputs[5] = this.visionAhead_where[0],this.visionAhead_where[1];
-        inputs[6] = this.visionRightSoft_where[0],this.visionRightSoft_where[1];
-        inputs[7] = this.visionRightHard_where[0],this.visionRightHard_where[1];
+        inputs[3] = dist(pos.x,pos.y,this.visionLeftHard_where[0],this.visionLeftHard_where[1]);
+        inputs[4] = dist(pos.x,pos.y,this.visionLeftSoft_where[0],this.visionLeftSoft_where[1]);
+        inputs[5] = dist(pos.x,pos.y,this.visionAhead_where[0],this.visionAhead_where[1]);
+        inputs[6] = dist(pos.x,pos.y,this.visionRightSoft_where[0],this.visionRightSoft_where[1]);
+        inputs[7] = dist(pos.x,pos.y,this.visionRightHard_where[0],this.visionRightHard_where[1]);
         let output = this.brain.predict(inputs);
 
         return output;

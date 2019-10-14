@@ -123,16 +123,16 @@ class level {
     select_best(){
         //on trie cars[] du moin bon cars[0] vers le meilleur cars[cars.length];
         cars.sort((a,b) => (a.driver.score > b.driver.score) ? 1 : -1 );
-        //Mtn on efface les 2/3 moins bons
-        for (let i = 0; i < (3%cars["length"])*2; i++) {
+
+        //Mtn on efface tous ceux qui ont un score =< 0
+        while (cars.length>0 && cars[0].driver.score<=0) {
             cars[0].driver.dispose();
             cars.shift();
         }
-        //Mtn on créer 2 enfant par pilotes
+        //Mtn on créer autant d'enfant qu'il faudras a partir des joueur encore existant pour revenir au nombre de joueur voulut.
         this.new_child = [];
-        for (let i = 0; i < cars.length; i++) {
-            this.new_child.push(this.reproduce_driver(cars[i]));
-            this.new_child.push(this.reproduce_driver(cars[i]));            
+        while (this.new_child.length + cars.length < nbr_cars_wanted) {
+            this.new_child.push(this.reproduce_driver(cars[Math.floor(Math.random()*cars.length)]));
         }
         for (let i = 0; i < this.new_child.length && cars.length < nbr_cars_wanted; i++) {
             cars.push(new car(false, this.new_child[i]));
@@ -153,6 +153,7 @@ class level {
             cars[i].dir = -PI/2;
             cars[i].rotation = 0;
             cars[i].vitesse = createVector(0, 0);
+            cars[i].driver.reset();
             cars[i].stillAlive = true;
         }
     }

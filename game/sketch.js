@@ -35,13 +35,14 @@
 
 */
 
-
+p5.disableFriendlyErrors = true;
 
 let running = false;
 let cars = [];
 let mutation_rate = 0.1
 const nbr_neurone_hidden = 15;
-let nbr_cars_wanted = 10;
+let nbr_cars_wanted = 150;
+let max_time_between_checkpoint = 30; //Temps en sec pour pouvoir atteindre le checkpoint, passé ce delay le joueur meurs
 let mouseRoad = []
 
 
