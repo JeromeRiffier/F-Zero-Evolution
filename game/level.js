@@ -22,7 +22,7 @@ class level {
         this.draw_gen_control();
         this.affichage_score();
         
-        if(Date.now() - this.start_time < 180000 && this.nbr_pilote_vivant > 0){//180 000 milliseconde == 3min
+        if(this.nbr_pilote_vivant > 0){//180 000 milliseconde == 3min
             Map.draw();
             for (let index = 0; index < cars.length; index++){
                 cars[index].update()            
@@ -131,13 +131,36 @@ class level {
         }
         //Mtn on créer autant d'enfant qu'il faudras a partir des joueur encore existant pour revenir au nombre de joueur voulut.
         this.new_child = [];
+
         while (this.new_child.length + cars.length < nbr_cars_wanted) {
-            this.new_child.push(this.reproduce_driver(cars[Math.floor(Math.random()*cars.length)]));
+            let child = new Driver(false,this.random_select_by_score(cars))
+            let child_car = new car(false,child)
+            this.new_child.push(this.reproduce_driver(child_car));
+            child.dispose();
+            child_car.driver.dispose();
         }
         for (let i = 0; i < this.new_child.length && cars.length < nbr_cars_wanted; i++) {
             cars.push(new car(false, this.new_child[i]));
         }
         this.destroyNew_child();
+        return ;
+
+    }
+    //Fais marcher ça, c'est la clefs de tout
+    random_select_by_score(array){
+        let total_score = 0;
+        array.forEach(car => {
+            total_score += car.driver.score;
+        });
+        let rng = random(1, total_score);
+        //Remplacer par un while
+        for (let i = 0; i < array.length; i++) {
+            rng -= array[i].driver.score;
+            if(rng <= 0){
+                return array[i].driver.brain;
+            }
+        };
+        //Fin
 
     }
 
@@ -172,7 +195,5 @@ class level {
         this.start_frame =  frameCount;
         this.nbr_pilote_vivant = cars.length;
         running = true;
-
     }
-
 }

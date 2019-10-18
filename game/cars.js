@@ -90,7 +90,7 @@ class car {
             if (val==false) {
                 this.vitesse.mult(0.8);      
             }else{
-                let brake_value = map(val,0,1, 1,0.8);
+                let brake_value = map(val,0,1, 1,0.9);
                 this.vitesse.mult(brake_value);
             }
         }
@@ -104,12 +104,14 @@ class car {
             //console.log("Il aura quand même tenus un solide " + this.driver.tempsSurvecut/1000 + "sec  Et traverser " + this.driver.checkpointValide + " checkpoints le con^^");
         }
         calculate_score(){
-            this.driver.score = (this.driver.checkpointValide*10) + (this.driver.tourValide*50);
+            //console.log(this.driver.name + "est mort");
+            this.driver.score = (this.driver.checkpointValide*this.driver.checkpointValide*2) + (this.driver.tourValide*this.driver.tourValide*10);
             // + (1/Temps entre les checkpoint)*20
-            if (this.driver.temps_passage_checkpoint.length>1) {                
+            if (this.driver.temps_passage_checkpoint.length>1) {  
+                console.log(this.driver.name + "a passé plusieur checkpoint");
                 for (let i = 1; i < this.driver.temps_passage_checkpoint.length; i++) {
                     this.driver.score += (1/ (this.driver.temps_passage_checkpoint[i]-this.driver.temps_passage_checkpoint[i-1]))*20
-                    console.log(this.driver.name + " a obtenu " + (1/ (this.driver.temps_passage_checkpoint[i]-this.driver.temps_passage_checkpoint[i-1]))*20 + " point en passant les checkpoints")
+                    console.log(this.driver.name + " a obtenu " + (1/ (this.driver.temps_passage_checkpoint[i]-this.driver.temps_passage_checkpoint[i-1]))*30 + " point en passant les checkpoints")
                 }
             }
         }
@@ -140,26 +142,27 @@ class car {
             let actions = this.driver.think(this.pos, this.dir, this.vitesse);
 
 
-            //console.log('Acceleration = ' + actions[0]);
-            this.accelerated(actions[0]);
-
-            //console.log('Freinage = ' + actions[1]);
-            if (actions[1]<0.5) {
-                this.brake(actions[1])
-            }
-
+            
             //console.log('Direction = ' + actions[2]);
             let turn_val;
-            if(actions[2]>0.5){//Droite
-                turn_val = map(actions[2],0.5,1,0,0.2)
-
-            }else{//gauche
-                turn_val = map(actions[2],0,0.5,0,-0.2)
-
+            if(actions[0]>=0.5){//Droite
+                turn_val = map(actions[2],0.6,1,0,0.2);
+                this.setRotation(turn_val);
+                
+            }else if(actions[0]<0.5){//gauche
+                turn_val = map(actions[2],0,0.4,0,-0.2);
+                this.setRotation(turn_val);
+                
             }
-            this.setRotation(turn_val);
 
+            //console.log('Acceleration = ' + actions[0]);
+            this.accelerated(actions[1]);
 
+            //console.log('Freinage = ' + actions[1]);
+            if (actions[2]<0.5) {
+                this.brake(actions[1])
+            }
+            
         }
 
         collisionDetectionCheckpoint (){
@@ -188,7 +191,7 @@ class car {
                 }
                 if (collidePointLine(this.pos.x,this.pos.y,Map.checkpointX1s[this.valeurProchainCheckpoint],Map.checkpointY1s[this.valeurProchainCheckpoint],Map.checkpointX2s[this.valeurProchainCheckpoint],Map.checkpointY2s[this.valeurProchainCheckpoint], 0.5)) {
                     this.driver.checkpointValide += 1;
-                    this.driver.temps_passage_tours.push((Date.now() - level.start_time)/1000)
+                    this.driver.temps_passage_checkpoint.push((Date.now() - level.start_time)/1000)
                     this.driver.temps_inter_checkpoint=Date.now()/1000;
                     //console.log(this.driver.name + this.driver.checkpointValide + " checkpoint validé !" );
                     if (this.valeurProchainCheckpoint == this.nbrCheckpointTotal-1) {
